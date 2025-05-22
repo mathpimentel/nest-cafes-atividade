@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 
 export interface Cafe{
   nome: string;           // obrigatório
@@ -26,8 +26,12 @@ export class AppService {
     "tags": ["floral", "frutas vermelhas", "suave"]
   }]
 
-  getDetalhesCafe(id:string) : Cafe | undefined{
-    return this.cafes.find( cafe => cafe.id === id)
+  getDetalhesCafe(id:string) : Cafe{
+    const cafe = this.cafes.find( cafe => cafe.id === id)
+    if(!cafe){
+      throw new NotFoundException(`Café com ID ${id} não encontrado.`);
+    }
+    return cafe
   }
 
   createCoffee(cafe : Cafe){
@@ -41,5 +45,10 @@ export class AppService {
       throw new BadRequestException('O id é obrigatório');
     }
     this.cafes.push(cafe)
+    
+    return {
+      message: 'Café criado com sucesso',
+      cafe
+    }
   }
 }
