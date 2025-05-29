@@ -8,6 +8,7 @@ export interface Cafe{
   id: string;             // obrigatório
   descricao?: string;
   tags?: string[];
+  data: Date
 }
 
 @Injectable()
@@ -23,7 +24,8 @@ export class AppService {
     "preco": 22.0,
     "id": "30",
     "descricao": "Bebida delicada com notas florais e toque de frutas vermelhas.",
-    "tags": ["floral", "frutas vermelhas", "suave"]
+    "tags": ["floral", "frutas vermelhas", "suave"],
+    "data": new Date(2025, 4, 28)
   }]
 
   getDetalhesCafe(id:string) : Cafe{
@@ -44,6 +46,7 @@ export class AppService {
     if(!cafe.id){
       throw new BadRequestException('O id é obrigatório');
     }
+    cafe.data = new Date()
     this.cafes.push(cafe)
     
     return {
@@ -51,4 +54,20 @@ export class AppService {
       cafe
     }
   }
+
+  criarDateDeStringBR(dataBR: string): Date {
+    const [dia, mes, ano] = dataBR.split('/');
+    return new Date(Number(ano), Number(mes) - 1, Number(dia)); // mês é zero-based
+  }
+
+  getDetalhesData(start_date: string, end_date: string) {
+    const startD = this.criarDateDeStringBR(start_date)
+    const endD = this.criarDateDeStringBR(end_date)
+
+    const filterCoffes = this.cafes.filter(
+      cafe => (cafe.data >= startD && cafe.data <= endD));
+    return filterCoffes
+  }
+
+
 }
