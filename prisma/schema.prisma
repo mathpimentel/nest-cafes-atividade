@@ -13,3 +13,20 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Cafe {
+  id  Int @id @default(autoincrement())
+  nome String
+  tipo String
+  preco Float
+  descricao String
+  tags TagCafe[]
+  //itensPedido ItemPedido[]  
+}
+
+model TagCafe {
+  id      Int @id @default(autoincrement())
+  nome    String
+  cafeId  Int 
+  cafe    Cafe @relation(fields: [cafeId] , references: [id])
+}
