@@ -12,7 +12,7 @@ export interface Cafe{
 }
 
 @Injectable()
-export class AppService {
+export class CoffeeService {
   getHello(): string {
     return 'Hello World!';
   }
