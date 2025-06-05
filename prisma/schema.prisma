@@ -65,9 +65,14 @@ model ItemPedido {
 model Entrega {
   id                 Int      @id @default(autoincrement())
   endereco           String
-  status             String
+  status             Status
   dataPrevista       DateTime
   pedidoId           Int      @unique
   pedido             Pedido   @relation(fields: [pedidoId], references: [id])
 }
 
+enum Status {
+  pendente
+  em_transito
+  entregue
+}
