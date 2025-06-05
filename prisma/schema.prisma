@@ -21,7 +21,7 @@ model Cafe {
   preco Float
   descricao String
   tags TagCafe[]
-  //itensPedido ItemPedido[]  
+  itensPedido ItemPedido[]  
 }
 
 model TagCafe {
@@ -30,3 +30,44 @@ model TagCafe {
   cafeId  Int 
   cafe    Cafe @relation(fields: [cafeId] , references: [id])
 }
+
+model Cliente {
+  id       Int     @id @default(autoincrement())
+  nome     String
+  email    String  @unique
+  cpf      String  @unique
+  telefone String
+
+  pedidos  Pedido[]
+}
+
+model Pedido {
+  id             Int          @id @default(autoincrement())
+  dataPedido     DateTime    
+  totalPedido    Float
+  clienteId      Int
+  cliente        Cliente      @relation(fields: [clienteId], references: [id])
+  itens          ItemPedido[]
+  entrega        Entrega?
+}
+
+model ItemPedido {
+  id         Int     @id @default(autoincrement())
+  pedidoId   Int
+  cafeId     Int
+  quantidade Int
+  precoUnit  Float
+
+  pedido     Pedido  @relation(fields: [pedidoId], references: [id])
+  cafe       Cafe    @relation(fields: [cafeId], references: [id])
+}
+
+model Entrega {
+  id                 Int      @id @default(autoincrement())
+  endereco           String
+  status             String
+  dataPrevista       DateTime
+  pedidoId           Int      @unique
+  pedido             Pedido   @relation(fields: [pedidoId], references: [id])
+}
+
